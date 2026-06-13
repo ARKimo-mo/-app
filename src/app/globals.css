@@ -19,3 +19,15 @@ button, select, input, textarea { font: inherit; }
 button { cursor: pointer; }
 ::-webkit-scrollbar { width: 7px; height: 7px; }
 ::-webkit-scrollbar-thumb { border-radius: 999px; background: #d9dcf0; }
+
+/* Keep V2 hero cards compact on wide desktop viewports. */
+.v2-scope section.relative.overflow-hidden {
+  height: 280px;
+  min-height: 0;
+}
+.v2-scope section.relative.overflow-hidden img {
+  max-height: 280px;
+}
+.v2-scope .v2-resume-legacy > section:first-of-type {
+  display: none;
+}
