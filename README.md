@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 职前副本 AI
 
-## Getting Started
+面向大学生的 AI 求职成长平台高保真 Demo。用户可以生成职业数字分身、搜索并匹配公开岗位、生成岗位定制副本、提交开放回答并获得 AI 评估。
 
-First, run the development server:
+## 当前版本
+
+- `/v2`：原始高保真产品 Demo。
+- `/v3`：加入 JD 定制、岗位雷达和智能投递界面的演示版本。
+- `/v4`：当前完整版本。在 V2/V3 功能基础上接入 DeepSeek 与 Tavily。
+
+V4 AI 能力：
+
+- AI 职业数字分身
+- AI 定制副本生成
+- AI 开放回答评估
+- Tavily 公开岗位搜索与 DeepSeek 匹配
+- JSON Schema 校验、失败重试和 fallback 降级
+- AI 过程面板、证据引用和浏览器本地持久化
+
+## 本地运行
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+在项目根目录创建 `.env.local`：
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```env
+AI_API_KEY=你的 DeepSeek Key
+AI_BASE_URL=https://api.deepseek.com
+AI_FAST_MODEL=你的快速模型 ID
+AI_REASONING_MODEL=你的推理模型 ID
+TAVILY_API_KEY=你的 Tavily Key
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+启动开发环境：
 
-## Learn More
+```bash
+npm run dev -- --port 3012
+```
 
-To learn more about Next.js, take a look at the following resources:
+打开：
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- V4：<http://127.0.0.1:3012/v4>
+- V3：<http://127.0.0.1:3012/v3>
+- V2：<http://127.0.0.1:3012/v2>
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+生产模式：
 
-## Deploy on Vercel
+```bash
+npm run build
+npm run start -- --port 3012
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 验证
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm run lint
+npx tsc --noEmit
+npm run build
+```
+
+详细架构、文件说明、接口和后续开发建议见 [HANDOFF.md](./HANDOFF.md)。
+
+> `.env.local` 已被 Git 忽略。不要将 API Key 写入前端组件、提交记录或聊天内容。
