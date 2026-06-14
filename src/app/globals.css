@@ -28,6 +28,3 @@ button { cursor: pointer; }
 .v2-scope section.relative.overflow-hidden img {
   max-height: 280px;
 }
-.v2-scope .v2-resume-legacy > section:first-of-type {
-  display: none;
-}

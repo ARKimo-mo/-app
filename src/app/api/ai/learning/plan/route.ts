@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
-import { evaluationPrompt } from "@/lib/ai/prompts";
 import { runPrompt } from "@/lib/ai/server";
+import { learningPlanPrompt } from "@/lib/ai/v4";
 
 export async function POST(request: Request) {
   const input = await request.json();
   return NextResponse.json(
-    await runPrompt(evaluationPrompt, input, ["动态副本评分标准", "用户开放回答"]),
+    await runPrompt(learningPlanPrompt, input, ["试岗报告", "岗位短板", "用户分身", "任务评价"]),
   );
 }
