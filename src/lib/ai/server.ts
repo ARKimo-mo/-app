@@ -5,7 +5,7 @@ import type { AIResponse } from "./types";
 const stripJson = (value: string) =>
   value.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "").trim();
 
-async function requestModel(prompt: PromptDefinition<unknown, unknown>, input: unknown) {
+async function requestModel(prompt: PromptDefinition<unknown, unknown>, input: unknown, retryNote = "") {
   const apiKey = process.env.AI_API_KEY;
   const baseUrl = process.env.AI_BASE_URL || "https://api.deepseek.com";
   const model =
@@ -30,7 +30,7 @@ async function requestModel(prompt: PromptDefinition<unknown, unknown>, input: u
           role: "system",
           content: "严格遵守用户提示中的输出格式和证据约束，只输出合法 JSON。",
         },
-        { role: "user", content: prompt.build(input) },
+        { role: "user", content: retryNote ? `${prompt.build(input)}\n\n上一次输出未通过校验：${retryNote}\n请只输出修正后的合法 JSON。` : prompt.build(input) },
       ],
     }),
     signal: AbortSignal.timeout(30000),
@@ -57,6 +57,7 @@ export async function runPrompt<I, O>(
   const traceId = crypto.randomUUID();
   const generatedAt = new Date().toISOString();
   let lastError: unknown;
+  let retryNote = "";
 
   try {
     for (let attempt = 0; attempt < 2; attempt += 1) {
@@ -64,6 +65,7 @@ export async function runPrompt<I, O>(
         const { model, content } = await requestModel(
           definition as PromptDefinition<unknown, unknown>,
           input,
+          retryNote,
         );
         const parsed = definition.schema.safeParse(JSON.parse(stripJson(content)));
         if (!parsed.success) {
@@ -82,6 +84,7 @@ export async function runPrompt<I, O>(
         };
       } catch (error) {
         lastError = error;
+        retryNote = error instanceof Error ? error.message : "JSON 或 schema 校验失败";
       }
     }
     throw lastError;

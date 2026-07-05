@@ -31,6 +31,7 @@ import {
   V4TrialReportPage,
   V4TrialTask,
 } from "@/components/v4/flow";
+import { V4ResumeCenter } from "@/components/v4/resume-center";
 import type { V4FlowState } from "@/components/v4/types";
 import type { AIResponse, AvatarProfile, JobResult, MissionEvaluation, MissionPlan, UserProfileInput } from "@/lib/ai/types";
 
@@ -203,10 +204,12 @@ function PersistentJobRadarPage({ profile, avatar, go, toast, onTrace, onCustomi
       const cached=localStorage.getItem(JOB_RADAR_CACHE_KEY);
       if(!cached)return;
       const state=JSON.parse(cached);
-      setQuery(state.query || `${profile.targetRole} ${profile.city} 校招`);
-      setResults(Array.isArray(state.results)?state.results:[]);
-      setSavedJobs(Array.isArray(state.savedJobs)?state.savedJobs:[]);
-      setLastUpdated(state.lastUpdated || "");
+      queueMicrotask(()=>{
+        setQuery(state.query || `${profile.targetRole} ${profile.city} 校招`);
+        setResults(Array.isArray(state.results)?state.results:[]);
+        setSavedJobs(Array.isArray(state.savedJobs)?state.savedJobs:[]);
+        setLastUpdated(state.lastUpdated || "");
+      });
     } catch {
       localStorage.removeItem(JOB_RADAR_CACHE_KEY);
     }
@@ -322,7 +325,7 @@ function IntegratedApp({ initialPage, aiEnabled }: { initialPage: PageId; aiEnab
   const content:Record<PageId,ReactNode>={
     home:<HomePage go={setPage}/>, jd:aiEnabled?<V4JDWorkspace flow={flow} patch={patchFlow} profile={profile} avatar={avatar} go={p=>setPage(p)} toast={toast} onTrace={captureTrace}/>:<JDWorkspace go={setPage} toast={toast}/>,
     radar:aiEnabled?<PersistentJobRadarPage profile={profile} avatar={avatar} go={setPage} toast={toast} onTrace={captureTrace} onCustomize={customizeJob}/>:<JobRadarPageLegacy go={setPage} toast={toast}/>, applications:<Applications toast={toast}/>,
-    customMission:aiEnabled?<V4TrialTask flow={flow} patch={patchFlow} profile={profile} avatar={avatar} go={p=>setPage(p)} toast={toast} onTrace={captureTrace}/>:<MissionPageLegacy go={setPage} toast={toast}/>, customResume:<ResumePage toast={toast}/>,
+    customMission:aiEnabled?<V4TrialTask flow={flow} patch={patchFlow} profile={profile} avatar={avatar} go={p=>setPage(p)} toast={toast} onTrace={captureTrace}/>:<MissionPageLegacy go={setPage} toast={toast}/>, customResume:aiEnabled?<V4ResumeCenter toast={toast} profile={profile} flow={flow} onTrace={captureTrace}/>:<ResumePage toast={toast}/>,
     dashboard:aiEnabled?<V4Dashboard go={setPage}/>:legacy(<V2Dashboard go={goV2}/>), avatar:aiEnabled?<V4AvatarPage profile={profile} avatar={avatar} loading={aiLoading} edit={()=>setOnboarding(true)} openTrace={()=>setTraceOpen(true)} go={setPage}/>:legacy(<V2AvatarPage go={goV2}/>),
     recommend:aiEnabled?<V4TrialPlaza flow={flow} patch={patchFlow} go={p=>setPage(p)}/>:legacy(<V2Recommend go={goV2}/>), skill:legacy(<V2SkillPage go={goV2} toast={toast}/>),
     mission:aiEnabled?<V4TrialTask flow={flow} patch={patchFlow} profile={profile} avatar={avatar} go={p=>setPage(p)} toast={toast} onTrace={captureTrace}/>:legacy(<V2Mission go={goV2} grow={()=>setGrowth(x=>x+120)} toast={toast}/>),

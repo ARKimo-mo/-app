@@ -38,3 +38,126 @@ export const jobsSchema = z.object({
     evidence: jobList, gaps: jobList, recommendation: jobText, risk: jobText,
   })).max(8),
 });
+
+export const resumeJdAnalysisSchema = z.object({
+  job_title: jobText,
+  company_name: jobText,
+  company_type: jobText,
+  core_responsibilities: jobList,
+  hard_requirements: jobList,
+  soft_requirements: jobList,
+  priority_skills: jobList,
+  keywords: jobList,
+  hidden_expectations: jobList,
+  resume_optimization_direction: jobList,
+  evidence: jobList,
+});
+
+export const resumeProfileSchema = z.object({
+  basic_info: z.record(z.string(), z.string()).catch({}),
+  education: jobList,
+  internships: z.array(z.object({
+    evidence_id: jobText,
+    company: jobText,
+    role: jobText,
+    time: jobText,
+    bullets: jobList,
+    extracted_skills: jobList,
+    needs_quantification: z.boolean().catch(true),
+  })).catch([]),
+  projects: z.array(z.object({
+    evidence_id: jobText,
+    name: jobText,
+    role: jobText,
+    bullets: jobList,
+    extracted_skills: jobList,
+    evidence_strength: z.enum(["high", "medium", "low"]).catch("medium"),
+    needs_quantification: z.boolean().catch(true),
+  })).catch([]),
+  skills: jobList,
+  certificates: jobList,
+  self_evaluation: z.string().catch(""),
+  raw_sections: jobList,
+  evidence_index: z.array(z.object({
+    evidence_id: jobText,
+    section: jobText,
+    text: jobText,
+  })).catch([]),
+});
+
+export const resumeMatchReportSchema = z.object({
+  overall_score: scored,
+  score_breakdown: z.object({
+    education: scored,
+    experience_relevance: scored,
+    keyword_coverage: scored,
+    result_quality: scored,
+    expression_quality: scored,
+  }),
+  strong_matches: jobList,
+  weak_matches: jobList,
+  missing_keywords: jobList,
+  missing_experience: jobList,
+  section_diagnosis: z.array(z.object({
+    section: jobText,
+    status: z.enum(["已完善", "建议优化", "缺失"]).catch("建议优化"),
+    reason: jobText,
+    optimization_priority: z.enum(["high", "medium", "low"]).catch("medium"),
+    evidence_id: z.string().catch(""),
+  })).catch([]),
+  rewrite_plan: z.array(z.object({
+    section: jobText,
+    evidence_id: jobText,
+    target_keywords: jobList,
+    direction: jobText,
+  })).catch([]),
+  must_not_fake: jobList,
+});
+
+export const resumeDiscoverySchema = z.object({
+  questions: z.array(z.object({
+    target_skill: jobText,
+    related_jd_requirement: jobText,
+    related_evidence_id: z.string().catch(""),
+    question: jobText,
+    why_ask: jobText,
+    example_answer_structure: jobText,
+    risk_if_unanswered: jobText,
+  })).min(1).max(8),
+});
+
+export const resumeRewriteSchema = z.object({
+  rewrites: z.array(z.object({
+    section: jobText,
+    evidence_id: jobText,
+    original_text: jobText,
+    rewritten_text: jobText,
+    jd_keywords_used: jobList,
+    improvement_reason: jobList,
+    risk_level: z.enum(["low", "medium", "high"]).catch("medium"),
+    need_user_confirmation: z.boolean().catch(true),
+    confirmation_question: z.string().catch(""),
+  })).catch([]),
+  tailored_resume: z.object({
+    summary: z.string().catch(""),
+    education: jobList,
+    experience: jobList,
+    projects: jobList,
+    skills: jobList,
+  }),
+});
+
+export const resumeFactCheckSchema = z.object({
+  pass: z.boolean(),
+  ats_score: scored,
+  keyword_coverage: jobList,
+  missing_keywords: jobList,
+  risk_items: z.array(z.object({
+    text: jobText,
+    risk_type: z.enum(["unsupported_fact", "exaggerated_role", "unverified_number", "ats_gap", "too_ai_like", "too_long"]).catch("unsupported_fact"),
+    severity: z.enum(["low", "medium", "high"]).catch("medium"),
+    reason: jobText,
+    suggested_fix: jobText,
+  })).catch([]),
+  final_suggestions: jobList,
+});

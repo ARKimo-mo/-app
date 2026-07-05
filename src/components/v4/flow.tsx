@@ -261,7 +261,7 @@ export function V4LearningPage({ flow, patch, go }: { flow: V4FlowState; patch: 
   useEffect(() => {
     try {
       const saved = JSON.parse(localStorage.getItem("career-copy-ai-v4-learning-center") || "[]");
-      if (Array.isArray(saved)) setCompletedCourses(saved);
+      if (Array.isArray(saved)) queueMicrotask(() => setCompletedCourses(saved));
     } catch {
       localStorage.removeItem("career-copy-ai-v4-learning-center");
     }
@@ -337,9 +337,11 @@ export function V4JDWorkspace({ flow, patch, profile, avatar, go, toast, onTrace
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     if (!source) return;
-    setTitle(source.title);
-    setCompany(source.company);
-    setJd(current => current || source.summary);
+    queueMicrotask(() => {
+      setTitle(source.title);
+      setCompany(source.company);
+      setJd(current => current || source.summary);
+    });
   }, [source]);
   const generate = async () => {
     if (jd.trim().length < 80) return toast("请确认或补充至少 80 字的完整 JD");
