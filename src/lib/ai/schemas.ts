@@ -1,9 +1,10 @@
 import { z } from "zod";
 
 const scored = z.preprocess(value => {
+  if (value === undefined || value === null || value === "") return undefined;
   if (typeof value === "string") return Number(value.replace("%", ""));
   return value;
-}, z.number().min(0).max(100));
+}, z.number().min(0).max(100).optional()).transform(value => value ?? 0);
 const jobText = z.string().catch("信息不足");
 const jobList = z.array(z.string()).catch([]);
 

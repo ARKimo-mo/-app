@@ -6,14 +6,18 @@ const stripJson = (value: string) =>
   value.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "").trim();
 
 async function requestModel(prompt: PromptDefinition<unknown, unknown>, input: unknown, retryNote = "") {
-  const apiKey = process.env.AI_API_KEY;
-  const baseUrl = process.env.AI_BASE_URL || "https://api.deepseek.com";
+  const apiKey = process.env.AI_API_KEY || process.env.DEEPSEEK_API_KEY;
+  const baseUrl = process.env.AI_BASE_URL || process.env.DEEPSEEK_BASE_URL || "https://api.deepseek.com";
   const model =
     prompt.model === "reasoning"
       ? process.env.AI_REASONING_MODEL || "deepseek-reasoner"
-      : process.env.AI_FAST_MODEL || "deepseek-chat";
+      : process.env.AI_FAST_MODEL || process.env.DEEPSEEK_MODEL || "deepseek-chat";
 
-  if (!apiKey) throw new Error("AI_API_KEY 未配置");
+  if (!apiKey) {
+    throw new Error(
+      "未配置 AI API Key。请在 .env.local 中设置 AI_API_KEY 或 DEEPSEEK_API_KEY。",
+    );
+  }
 
   const response = await fetch(`${baseUrl.replace(/\/$/, "")}/chat/completions`, {
     method: "POST",

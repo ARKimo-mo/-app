@@ -189,7 +189,7 @@ type ResumeParseInput = {
 
 export const resumeParsePrompt: PromptDefinition<ResumeParseInput, ResumeProfile> = {
   id: "resume-parse",
-  version: "1.0.0",
+  version: "1.0.1",
   model: "fast",
   schema: resumeProfileSchema,
   build: input =>

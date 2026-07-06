@@ -32,6 +32,7 @@ import {
   V4TrialTask,
 } from "@/components/v4/flow";
 import { V4ResumeCenter } from "@/components/v4/resume-center";
+import { V4InterviewTraining } from "@/components/v4/interview-training";
 import type { V4FlowState } from "@/components/v4/types";
 import type { AIResponse, AvatarProfile, JobResult, MissionEvaluation, MissionPlan, UserProfileInput } from "@/lib/ai/types";
 
@@ -115,15 +116,15 @@ const v4NavGroups = [
 
 function Sidebar({ page, go, grouped = false }: { page: PageId; go: (p: PageId) => void; grouped?: boolean }) {
   return <aside className="fixed inset-y-0 left-0 z-30 flex w-[240px] flex-col border-r border-[#e9eaf4] bg-white px-4 py-5">
-    <button onClick={() => go("dashboard")} className="mb-5 flex items-center gap-3 px-1 text-left"><span className="grid size-10 place-items-center rounded-xl bg-gradient-to-br from-[#7a70ff] to-[#4d42e8] text-white shadow-lg shadow-violet-200"><Sparkles size={19} /></span><span><b className="block text-[17px]">职前副本 AI</b><small className="text-[9px] text-[#8a91aa]">先试岗，再成长，拿证据证明自己</small></span></button>
+    <button onClick={() => go("dashboard")} className="mb-5 flex items-center gap-3 px-1 text-left max-[760px]:mb-2"><span className="grid size-10 place-items-center rounded-xl bg-gradient-to-br from-[#7a70ff] to-[#4d42e8] text-white shadow-lg shadow-violet-200 max-[760px]:size-8"><Sparkles size={19} /></span><span><b className="block text-[17px] max-[760px]:text-[14px]">职前副本 AI</b><small className="text-[9px] text-[#8a91aa] max-[760px]:hidden">先试岗，再成长，拿证据证明自己</small></span></button>
     <nav className="flex-1 space-y-1 overflow-y-auto pr-1">
       {grouped ? <>
-        <button onClick={() => go("dashboard")} className={cx("mb-2 flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-[11px] transition", page === "dashboard" ? "bg-gradient-to-r from-[#efedff] to-[#faf9ff] font-semibold text-[#594ee8]" : "text-[#56617c] hover:bg-[#f7f7fc]")}><Home size={15} />首页</button>
-        {v4NavGroups.map(group => <div key={group.label} className="pt-2"><p className="px-3 pb-1 text-[8px] font-semibold text-[#a0a6ba]">{group.label}</p>{group.items.map(([id, label, Icon]) => <button key={id} onClick={() => go(id)} className={cx("flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-[10px] transition", page === id ? "bg-gradient-to-r from-[#efedff] to-[#faf9ff] font-semibold text-[#594ee8]" : "text-[#56617c] hover:bg-[#f7f7fc]")}><Icon size={14} />{label}{id === "radar" && <span className="ml-auto rounded-full bg-[#655af3] px-1.5 py-0.5 text-[8px] text-white">AI</span>}</button>)}</div>)}
-        <button onClick={() => go("settings")} className={cx("mt-2 flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-[10px] transition", page === "settings" ? "bg-gradient-to-r from-[#efedff] to-[#faf9ff] font-semibold text-[#594ee8]" : "text-[#56617c] hover:bg-[#f7f7fc]")}><Settings size={14} />设置</button>
+        <button onClick={() => go("dashboard")} className={cx("mb-2 flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-[11px] transition max-[760px]:mb-1 max-[760px]:py-1", page === "dashboard" ? "bg-gradient-to-r from-[#efedff] to-[#faf9ff] font-semibold text-[#594ee8]" : "text-[#56617c] hover:bg-[#f7f7fc]")}><Home size={15} />首页</button>
+        {v4NavGroups.map(group => <div key={group.label} className="pt-2 max-[760px]:pt-1"><p className="px-3 pb-1 text-[8px] font-semibold text-[#a0a6ba]">{group.label}</p>{group.items.map(([id, label, Icon]) => <button key={id} onClick={() => go(id)} className={cx("flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-[10px] transition max-[760px]:py-1", page === id ? "bg-gradient-to-r from-[#efedff] to-[#faf9ff] font-semibold text-[#594ee8]" : "text-[#56617c] hover:bg-[#f7f7fc]")}><Icon size={14} />{label}{id === "radar" && <span className="ml-auto rounded-full bg-[#655af3] px-1.5 py-0.5 text-[8px] text-white">AI</span>}</button>)}</div>)}
+        <button onClick={() => go("settings")} className={cx("mt-2 flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-[10px] transition max-[760px]:mt-1 max-[760px]:py-1", page === "settings" ? "bg-gradient-to-r from-[#efedff] to-[#faf9ff] font-semibold text-[#594ee8]" : "text-[#56617c] hover:bg-[#f7f7fc]")}><Settings size={14} />设置</button>
       </> : nav.map(([id, label, Icon]) => <button key={id} onClick={() => go(id)} className={cx("flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-[11px] transition", page === id ? "bg-gradient-to-r from-[#efedff] to-[#faf9ff] font-semibold text-[#594ee8]" : "text-[#56617c] hover:bg-[#f7f7fc]")}><Icon size={15} />{label}{id === "radar" && <span className="ml-auto rounded-full bg-[#655af3] px-1.5 py-0.5 text-[8px] text-white">12</span>}</button>)}
     </nav>
-    <div className="mt-auto space-y-3"><Card className="p-3"><div className="flex items-center gap-2"><div className="relative size-10 overflow-hidden rounded-full bg-[#ebe9ff]"><Image src="/assets/avatar-student-profile.png" alt="林同学" fill className="object-cover" /></div><div><b className="block text-xs">林同学</b><small className="text-[9px] text-[#8a91aa]">Lv.4 成长探索者</small></div></div><div className="mt-3 flex justify-between text-[9px] text-[#8a91aa]"><span>经验值 1280 / 2000</span><span>64%</span></div><div className="mt-1"><Progress value={64} /></div></Card><Card className="p-3"><div className="flex justify-around text-amber-500"><Trophy size={22} /><BadgeCheck size={22} /><Star size={22} /></div><p className="mt-2 text-[10px] text-[#737b98]">已解锁 7 枚成长徽章</p></Card></div>
+    <div className="mt-auto space-y-3 max-[760px]:hidden"><Card className="p-3"><div className="flex items-center gap-2"><div className="relative size-10 overflow-hidden rounded-full bg-[#ebe9ff]"><Image src="/assets/avatar-student-profile.png" alt="林同学" fill className="object-cover" /></div><div><b className="block text-xs">林同学</b><small className="text-[9px] text-[#8a91aa]">Lv.4 成长探索者</small></div></div><div className="mt-3 flex justify-between text-[9px] text-[#8a91aa]"><span>经验值 1280 / 2000</span><span>64%</span></div><div className="mt-1"><Progress value={64} /></div></Card><Card className="p-3"><div className="flex justify-around text-amber-500"><Trophy size={22} /><BadgeCheck size={22} /><Star size={22} /></div><p className="mt-2 text-[10px] text-[#737b98]">已解锁 7 枚成长徽章</p></Card></div>
   </aside>;
 }
 function Topbar({ go }: { go: (p: PageId) => void }) {
@@ -296,9 +297,36 @@ function IntegratedApp({ initialPage, aiEnabled }: { initialPage: PageId; aiEnab
   const [onboarding,setOnboarding]=useState(false);
   const [aiLoading,setAiLoading]=useState(false);
   const [hydrated,setHydrated]=useState(false);
-  useEffect(()=>{if(!aiEnabled)return;try{const saved=localStorage.getItem("career-copy-ai-v4");if(saved){const state=JSON.parse(saved);setProfile(state.profile??defaultProfile);setAvatar(state.avatar??null);setMission(state.mission??null);setEvaluation(state.evaluation??null);setFlow(mergeFlowState(state.flow));}setOnboarding(!localStorage.getItem("career-copy-ai-v4-onboarded"));}finally{setHydrated(true)}},[aiEnabled]);
+  useEffect(()=>{
+    const readHash=()=>{const hash=window.location.hash.replace("#","") as PageId;if(hash&&hash in content)setPage(hash)};
+    readHash();
+    window.addEventListener("hashchange",readHash);
+    return()=>window.removeEventListener("hashchange",readHash);
+  },[]);
+  useEffect(()=>{
+    if(!aiEnabled)return;
+    try{
+      const saved=localStorage.getItem("career-copy-ai-v4");
+      if(saved){
+        try{
+          const state=JSON.parse(saved);
+          setProfile(state.profile??defaultProfile);
+          setAvatar(state.avatar??null);
+          setMission(state.mission??null);
+          setEvaluation(state.evaluation??null);
+          setFlow(mergeFlowState(state.flow));
+        }catch{
+          localStorage.removeItem("career-copy-ai-v4");
+        }
+      }
+      setOnboarding(false);
+    }finally{
+      setHydrated(true)
+    }
+  },[aiEnabled]);
   useEffect(()=>{if(aiEnabled&&hydrated)localStorage.setItem("career-copy-ai-v4",JSON.stringify({profile,avatar,mission,evaluation,flow}))},[aiEnabled,hydrated,profile,avatar,mission,evaluation,flow]);
   const toast=(s:string)=>{setMessage(s);window.setTimeout(()=>setMessage(""),2200)};
+  const navigate=(next:PageId)=>{setPage(next); if(typeof window!=="undefined") window.location.hash=next};
   const captureTrace=(r:AIResponse<unknown>,action:string)=>{setTrace({...r,action});setTraceOpen(true)};
   const generateAvatar=async(nextProfile:UserProfileInput=profile)=>{setProfile(nextProfile);setAiLoading(true);try{const r=await callAI<AvatarProfile>("/api/ai/avatar/profile",nextProfile);setAvatar(r.data);captureTrace(r,"根据引导资料生成职业数字分身");localStorage.setItem("career-copy-ai-v4-onboarded","1");setOnboarding(false);toast(r.mode==="live"?"真实 AI 职业分身已生成":"未配置或调用失败，已使用降级画像");}catch(e){toast(e instanceof Error?e.message:"职业分身生成失败");}finally{setAiLoading(false)}};
   const patchFlow=(patch:Partial<V4FlowState>)=>setFlow(current=>({...current,...patch}));
@@ -320,20 +348,20 @@ function IntegratedApp({ initialPage, aiEnabled }: { initialPage: PageId; aiEnab
     }));
     setPage("jd");
   };
-  const goV2=(p:V2PageId)=>setPage(p);
+  const goV2=(p:V2PageId)=>navigate(p);
   const legacy=(node:ReactNode)=><div className="v2-scope">{node}</div>;
   const content:Record<PageId,ReactNode>={
-    home:<HomePage go={setPage}/>, jd:aiEnabled?<V4JDWorkspace flow={flow} patch={patchFlow} profile={profile} avatar={avatar} go={p=>setPage(p)} toast={toast} onTrace={captureTrace}/>:<JDWorkspace go={setPage} toast={toast}/>,
-    radar:aiEnabled?<PersistentJobRadarPage profile={profile} avatar={avatar} go={setPage} toast={toast} onTrace={captureTrace} onCustomize={customizeJob}/>:<JobRadarPageLegacy go={setPage} toast={toast}/>, applications:<Applications toast={toast}/>,
-    customMission:aiEnabled?<V4TrialTask flow={flow} patch={patchFlow} profile={profile} avatar={avatar} go={p=>setPage(p)} toast={toast} onTrace={captureTrace}/>:<MissionPageLegacy go={setPage} toast={toast}/>, customResume:aiEnabled?<V4ResumeCenter toast={toast} profile={profile} flow={flow} onTrace={captureTrace}/>:<ResumePage toast={toast}/>,
-    dashboard:aiEnabled?<V4Dashboard go={setPage}/>:legacy(<V2Dashboard go={goV2}/>), avatar:aiEnabled?<V4AvatarPage profile={profile} avatar={avatar} loading={aiLoading} edit={()=>setOnboarding(true)} openTrace={()=>setTraceOpen(true)} go={setPage}/>:legacy(<V2AvatarPage go={goV2}/>),
-    recommend:aiEnabled?<V4TrialPlaza flow={flow} patch={patchFlow} go={p=>setPage(p)}/>:legacy(<V2Recommend go={goV2}/>), skill:legacy(<V2SkillPage go={goV2} toast={toast}/>),
-    mission:aiEnabled?<V4TrialTask flow={flow} patch={patchFlow} profile={profile} avatar={avatar} go={p=>setPage(p)} toast={toast} onTrace={captureTrace}/>:legacy(<V2Mission go={goV2} grow={()=>setGrowth(x=>x+120)} toast={toast}/>),
-    review:aiEnabled?<V4TrialReportPage flow={flow} patch={patchFlow} profile={profile} avatar={avatar} updateProfile={setProfile} updateAvatar={setAvatar} go={p=>setPage(p)} toast={toast} onTrace={captureTrace}/>:legacy(<V2Review go={goV2}/>), portfolio:legacy(<V2Portfolio toast={toast}/>),
-    learning:aiEnabled?<V4LearningPage flow={flow} patch={patchFlow} go={p=>setPage(p)}/>:legacy(<V2Learning toast={toast}/>), resume:legacy(<V2Resume toast={toast}/>),
-    interview:legacy(<V2Interview toast={toast}/>), settings:<div className="space-y-3">{legacy(<V2SettingsPage toast={toast}/>)}{aiEnabled&&<Card><Title>V4 AI 数据与引导</Title><div className="flex gap-3"><Button ghost onClick={()=>setOnboarding(true)}><Bot size={14}/>重新开始 AI 引导</Button><Button ghost onClick={clearAI}><X size={14}/>清除本地 AI 数据</Button></div><p className="mt-3 text-[9px] text-[#8a91aa]">API Key 仅保存在服务端 .env.local；职业分身、副本和评估结果保存在当前浏览器。</p></Card>}</div>,
+    home:<HomePage go={navigate}/>, jd:aiEnabled?<V4JDWorkspace flow={flow} patch={patchFlow} profile={profile} avatar={avatar} go={p=>navigate(p)} toast={toast} onTrace={captureTrace}/>:<JDWorkspace go={navigate} toast={toast}/>,
+    radar:aiEnabled?<PersistentJobRadarPage profile={profile} avatar={avatar} go={navigate} toast={toast} onTrace={captureTrace} onCustomize={customizeJob}/>:<JobRadarPageLegacy go={navigate} toast={toast}/>, applications:<Applications toast={toast}/>,
+    customMission:aiEnabled?<V4TrialTask flow={flow} patch={patchFlow} profile={profile} avatar={avatar} go={p=>navigate(p)} toast={toast} onTrace={captureTrace}/>:<MissionPageLegacy go={navigate} toast={toast}/>, customResume:aiEnabled?<V4ResumeCenter toast={toast} profile={profile} flow={flow} onTrace={captureTrace}/>:<ResumePage toast={toast}/>,
+    dashboard:aiEnabled?<V4Dashboard go={navigate}/>:legacy(<V2Dashboard go={goV2}/>), avatar:aiEnabled?<V4AvatarPage profile={profile} avatar={avatar} loading={aiLoading} edit={()=>setOnboarding(true)} openTrace={()=>setTraceOpen(true)} go={navigate}/>:legacy(<V2AvatarPage go={goV2}/>),
+    recommend:aiEnabled?<V4TrialPlaza flow={flow} patch={patchFlow} go={p=>navigate(p)}/>:legacy(<V2Recommend go={goV2}/>), skill:legacy(<V2SkillPage go={goV2} toast={toast}/>),
+    mission:aiEnabled?<V4TrialTask flow={flow} patch={patchFlow} profile={profile} avatar={avatar} go={p=>navigate(p)} toast={toast} onTrace={captureTrace}/>:legacy(<V2Mission go={goV2} grow={()=>setGrowth(x=>x+120)} toast={toast}/>),
+    review:aiEnabled?<V4TrialReportPage flow={flow} patch={patchFlow} profile={profile} avatar={avatar} updateProfile={setProfile} updateAvatar={setAvatar} go={p=>navigate(p)} toast={toast} onTrace={captureTrace}/>:legacy(<V2Review go={goV2}/>), portfolio:legacy(<V2Portfolio toast={toast}/>),
+    learning:aiEnabled?<V4LearningPage flow={flow} patch={patchFlow} go={p=>navigate(p)}/>:legacy(<V2Learning toast={toast}/>), resume:aiEnabled?<V4ResumeCenter toast={toast} profile={profile} flow={flow} onTrace={captureTrace}/>:legacy(<V2Resume toast={toast}/>),
+    interview:aiEnabled?<V4InterviewTraining toast={toast} profile={profile} flow={flow} onTrace={captureTrace}/>:legacy(<V2Interview toast={toast}/>), settings:<div className="space-y-3">{legacy(<V2SettingsPage toast={toast}/>)}{aiEnabled&&<Card><Title>V4 AI 数据与引导</Title><div className="flex gap-3"><Button ghost onClick={()=>setOnboarding(true)}><Bot size={14}/>重新开始 AI 引导</Button><Button ghost onClick={clearAI}><X size={14}/>清除本地 AI 数据</Button></div><p className="mt-3 text-[9px] text-[#8a91aa]">API Key 仅保存在服务端 .env.local；职业分身、副本和评估结果保存在当前浏览器。</p></Card>}</div>,
   };
-  return <div className="min-h-screen bg-[#f7f8fc] text-[#171a2d]"><Sidebar page={page} go={setPage} grouped={aiEnabled}/><Topbar go={setPage}/><motion.main key={page} initial={{opacity:0,y:7}} animate={{opacity:1,y:0}} className="ml-[240px] min-h-screen pt-[66px]"><div className="mx-auto max-w-[1680px] p-4">{content[page]}</div></motion.main>{aiEnabled&&<button onClick={()=>setTraceOpen(true)} className="fixed bottom-6 left-[260px] z-40 flex items-center gap-2 rounded-xl bg-[#171a2d] px-4 py-3 text-xs font-semibold text-white shadow-xl"><Bot size={15}/>{trace?.mode==="live"?"真实 AI 运行记录":trace?"降级 AI 运行记录":"AI 过程面板"}</button>}<AnimatePresence>{traceOpen&&aiEnabled&&<AIProcessPanel trace={trace} close={()=>setTraceOpen(false)}/>}</AnimatePresence><AnimatePresence>{onboarding&&aiEnabled&&<V4Onboarding profile={profile} finish={generateAvatar} close={()=>setOnboarding(false)} loading={aiLoading}/>}</AnimatePresence><AnimatePresence>{message&&<motion.div initial={{opacity:0,y:12}} animate={{opacity:1,y:0}} exit={{opacity:0,y:12}} className="fixed bottom-6 right-6 z-50 flex items-center gap-2 rounded-xl bg-[#171a2d] px-4 py-3 text-xs text-white shadow-2xl"><Check size={14} className="text-emerald-400"/>{message}</motion.div>}</AnimatePresence></div>;
+  return <div className="min-h-screen bg-[#f7f8fc] text-[#171a2d]"><Sidebar page={page} go={navigate} grouped={aiEnabled}/><Topbar go={navigate}/><motion.main key={page} initial={{opacity:0,y:7}} animate={{opacity:1,y:0}} className="ml-[240px] min-h-screen pt-[66px]"><div className="mx-auto max-w-[1680px] p-4">{content[page]}</div></motion.main>{aiEnabled&&<button onClick={()=>setTraceOpen(true)} className="fixed bottom-6 left-[260px] z-40 flex items-center gap-2 rounded-xl bg-[#171a2d] px-4 py-3 text-xs font-semibold text-white shadow-xl"><Bot size={15}/>{trace?.mode==="live"?"真实 AI 运行记录":trace?"降级 AI 运行记录":"AI 过程面板"}</button>}<AnimatePresence>{traceOpen&&aiEnabled&&<AIProcessPanel trace={trace} close={()=>setTraceOpen(false)}/>}</AnimatePresence><AnimatePresence>{onboarding&&aiEnabled&&<V4Onboarding profile={profile} finish={generateAvatar} close={()=>setOnboarding(false)} loading={aiLoading}/>}</AnimatePresence><AnimatePresence>{message&&<motion.div initial={{opacity:0,y:12}} animate={{opacity:1,y:0}} exit={{opacity:0,y:12}} className="fixed bottom-6 right-6 z-50 flex items-center gap-2 rounded-xl bg-[#171a2d] px-4 py-3 text-xs text-white shadow-2xl"><Check size={14} className="text-emerald-400"/>{message}</motion.div>}</AnimatePresence></div>;
 }
 
 export function V3App() {
